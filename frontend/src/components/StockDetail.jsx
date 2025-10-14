@@ -38,11 +38,21 @@ function StockDetail() {
 
   const formatPercent = (num) => {
     if (!num) return '-'
-    // 保持数据库中的完整位数，转换为百分比显示
+    
+    // 转换为百分比
     const percent = parseFloat(num) * 100
-    // 如果原始数据有6位小数，则显示6位小数
-    const decimalPlaces = num.toString().split('.')[1]?.length || 2
-    return `${percent.toFixed(decimalPlaces)}%`
+    
+    // 自适应格式化：保留两位有效数字
+    if (percent >= 1) {
+      // 大于等于1%时，显示两位小数
+      return `${percent.toFixed(2)}%`
+    } else if (percent >= 0.01) {
+      // 0.01% - 1%之间，显示两位小数
+      return `${percent.toFixed(2)}%`
+    } else {
+      // 小于0.01%时，显示更多小数位以保持精度
+      return `${percent.toFixed(4)}%`
+    }
   }
 
   if (loading) {
