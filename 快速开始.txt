@@ -1,0 +1,47 @@
+打新计算器 - 快速开始
+========================
+
+1. 安装依赖
+-----------
+在终端执行：
+
+# 安装后端依赖
+cd backend
+npm install
+
+# 安装前端依赖
+cd ../frontend
+npm install
+
+
+2. 启动服务
+-----------
+需要同时启动前端和后端
+
+【终端1 - 后端】
+cd backend
+npm start
+
+【终端2 - 前端】
+cd frontend
+npm run dev
+
+
+3. 访问应用
+-----------
+在浏览器打开：http://localhost:3000
+
+
+功能说明
+--------
+✓ 打新计算器：输入资金和费率，计算收益
+✓ 新股数据表：自动显示数据库中的招股书数据
+✓ 自动刷新：每30秒自动更新数据
+
+
+技术栈
+------
+前端：React + Vite + Tailwind CSS
+后端：Node.js + Express
+数据库：PostgreSQL (Zeabur)
+
