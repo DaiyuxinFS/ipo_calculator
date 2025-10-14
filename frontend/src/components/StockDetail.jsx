@@ -38,7 +38,11 @@ function StockDetail() {
 
   const formatPercent = (num) => {
     if (!num) return '-'
-    return `${parseFloat(num).toFixed(2)}%`
+    // 保持数据库中的完整位数，转换为百分比显示
+    const percent = parseFloat(num) * 100
+    // 如果原始数据有6位小数，则显示6位小数
+    const decimalPlaces = num.toString().split('.')[1]?.length || 2
+    return `${percent.toFixed(decimalPlaces)}%`
   }
 
   if (loading) {
