@@ -248,6 +248,13 @@
   border-radius: 2px;
 }
 
+.stock-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
 .detail-table {
   width: 100%;
   border-collapse: collapse;
@@ -339,51 +346,389 @@
   color: #aaa;
 }
 
-@media (max-width: 768px) {
+/* Tablet - 768px a 1024px */
+@media (max-width: 1024px) and (min-width: 769px) {
   .nav-bar {
-    padding: 1.8rem 2rem;
-    font-size: 0.58rem;
-  }
-
-  .nav-right {
-    gap: 1.2rem;
+    padding: 2rem 3rem;
+    font-size: 0.62rem;
   }
 
   .main-container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-top: 8rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    max-width: 100%;
   }
 
   .hero-title {
-    font-size: clamp(3rem, 13vw, 7rem);
-    margin: 3rem 0 5rem 0;
+    font-size: clamp(4rem, 14vw, 10rem);
+    margin: 5rem 0 8rem 0;
   }
 
-  .button-group {
-    flex-direction: column;
+  .calculator-section {
+    max-width: 600px;
   }
 
   .result-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
   }
 
   .minimal-table {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
   }
 
   .minimal-table thead th,
   .minimal-table tbody td {
-    padding: 0.9rem 0.3rem;
+    padding: 1.1rem 0.4rem;
   }
 
   .detail-table {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
   }
 
   .detail-table thead th,
   .detail-table tbody td {
+    padding: 1.1rem 0.4rem;
+  }
+
+  .detail-btn {
+    font-size: 0.58rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Mobile - Menos de 768px */
+@media (max-width: 768px) {
+  .nav-bar {
+    padding: 1.5rem 1.5rem;
+    font-size: 0.55rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-right {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .main-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 7rem;
+    padding-bottom: 4rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 12vw, 6rem);
+    margin: 2rem 0 4rem 0;
+    -webkit-text-stroke: 0.8px rgba(70, 70, 70, 0.5);
+  }
+
+  .calculator-section {
+    max-width: 100%;
+    margin-bottom: 6rem;
+  }
+
+  .section-title {
+    font-size: 0.65rem;
+    margin-bottom: 2rem;
+  }
+
+  .input-group {
+    margin-bottom: 2rem;
+  }
+
+  .input-label {
+    font-size: 0.62rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .input-field {
+    padding: 0.8rem 0;
+    font-size: 0.95rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .btn {
+    padding: 1rem 2rem;
+    font-size: 0.65rem;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+    margin-top: 2rem;
+  }
+
+  .result-value {
+    font-size: 1.4rem;
+  }
+
+  .result-label {
+    font-size: 0.58rem;
+  }
+
+  .result-hint {
+    font-size: 0.55rem;
+  }
+
+  .table-section {
+    margin: 6rem auto 4rem auto;
+  }
+
+  .table-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .refresh-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.58rem;
+    width: 100%;
+  }
+
+  /* Tablas con scroll horizontal mejorado */
+  .minimal-table {
+    font-size: 0.62rem;
+    min-width: 900px; /* Forzar scroll en móvil */
+  }
+
+  .minimal-table thead th {
+    padding: 1rem 0.5rem;
+    font-size: 0.55rem;
+    white-space: nowrap;
+  }
+
+  .minimal-table tbody td {
+    padding: 1.2rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  .detail-table {
+    font-size: 0.62rem;
+    min-width: 700px; /* Forzar scroll en móvil */
+  }
+
+  .detail-table thead th {
+    padding: 1rem 0.4rem;
+    font-size: 0.55rem;
+    white-space: nowrap;
+  }
+
+  .detail-table tbody td {
+    padding: 1.2rem 0.4rem;
+    white-space: nowrap;
+  }
+
+  .detail-btn {
+    font-size: 0.55rem;
+    padding: 0.5rem 0.8rem;
+    white-space: nowrap;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .stock-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .stock-info-grid p {
+    font-size: 0.85rem !important;
+  }
+
+  .detail-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .detail-header .refresh-btn {
+    width: 100%;
+  }
+
+  .empty-state,
+  .loading {
+    padding: 3rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .error-message {
+    padding: 2rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Mobile Pequeño - Menos de 480px */
+@media (max-width: 480px) {
+  .nav-bar {
+    padding: 1.2rem 1rem;
+    font-size: 0.52rem;
+  }
+
+  .nav-right {
+    gap: 0.8rem;
+  }
+
+  .main-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 6rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 11vw, 5rem);
+    margin: 1.5rem 0 3rem 0;
+    -webkit-text-stroke: 0.6px rgba(70, 70, 70, 0.5);
+  }
+
+  .section-title {
+    font-size: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .calculator-section {
+    margin-bottom: 5rem;
+  }
+
+  .input-group {
+    margin-bottom: 1.8rem;
+  }
+
+  .input-label {
+    font-size: 0.58rem;
+  }
+
+  .input-field {
+    padding: 0.7rem 0;
+    font-size: 0.9rem;
+  }
+
+  .button-group {
+    gap: 0.8rem;
+    margin-top: 2rem;
+  }
+
+  .btn {
+    padding: 0.9rem 1.8rem;
+    font-size: 0.62rem;
+  }
+
+  .result-grid {
+    gap: 1.5rem;
+  }
+
+  .result-value {
+    font-size: 1.2rem;
+  }
+
+  .result-label {
+    font-size: 0.55rem;
+  }
+
+  .result-hint {
+    font-size: 0.52rem;
+  }
+
+  .table-section {
+    margin: 5rem auto 3rem auto;
+  }
+
+  .refresh-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.55rem;
+  }
+
+  .minimal-table {
+    font-size: 0.58rem;
+    min-width: 850px;
+  }
+
+  .minimal-table thead th {
+    padding: 0.9rem 0.4rem;
+    font-size: 0.52rem;
+  }
+
+  .minimal-table tbody td {
+    padding: 1.1rem 0.4rem;
+  }
+
+  .detail-table {
+    font-size: 0.58rem;
+    min-width: 650px;
+  }
+
+  .detail-table thead th {
     padding: 0.9rem 0.3rem;
+    font-size: 0.52rem;
+  }
+
+  .detail-table tbody td {
+    padding: 1.1rem 0.3rem;
+  }
+
+  .detail-btn {
+    font-size: 0.52rem;
+    padding: 0.45rem 0.7rem;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  .stock-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .stock-info-grid p {
+    font-size: 0.8rem !important;
+  }
+
+  .empty-state,
+  .loading {
+    padding: 2.5rem 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .error-message {
+    padding: 1.8rem 0.8rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Mejoras generales para scroll horizontal en tablas */
+@media (max-width: 768px) {
+  [style*="overflowX: 'auto'"],
+  div[style*="overflow-x: auto"] {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+
+  [style*="overflowX: 'auto']::-webkit-scrollbar,
+  div[style*="overflow-x: auto"]::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  [style*="overflowX: 'auto']::-webkit-scrollbar-track,
+  div[style*="overflow-x: auto"]::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+  }
+
+  [style*="overflowX: 'auto']::-webkit-scrollbar-thumb,
+  div[style*="overflow-x: auto"]::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
   }
 }

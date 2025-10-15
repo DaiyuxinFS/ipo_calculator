@@ -90,11 +90,11 @@ function StockDetail() {
 
       {/* 股票基本信息 */}
       {stockInfo && (
-        <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <div className="card stock-info-card" style={{ marginBottom: '1.5rem' }}>
           <h2 className="section-title" style={{ marginBottom: '1rem' }}>
             {stockInfo.股票名}
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', fontSize: '0.9rem' }}>
+          <div className="stock-info-grid">
             <div>
               <p style={{ opacity: 0.6, fontSize: '0.8rem', marginBottom: '0.5rem' }}>股票代碼</p>
               <p style={{ fontWeight: '500', fontFamily: 'monospace' }}>{stockInfo.代码}</p>
@@ -114,7 +114,7 @@ function StockDetail() {
       {/* 申购明细表格 */}
       {applyDetails.length > 0 && (
         <div style={{ marginTop: '1rem', marginBottom: '2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <div className="detail-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
             <h3 className="section-title" style={{ marginBottom: 0 }}>檔位 & 申購詳情</h3>
             <button 
               onClick={fetchDetails}
