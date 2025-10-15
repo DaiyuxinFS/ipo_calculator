@@ -708,26 +708,22 @@
 
 /* Mejoras generales para scroll horizontal en tablas */
 @media (max-width: 768px) {
-  [style*="overflowX: 'auto'"],
-  div[style*="overflow-x: auto"] {
+  div[style*="overflow"] {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
   }
 
-  [style*="overflowX: 'auto']::-webkit-scrollbar,
-  div[style*="overflow-x: auto"]::-webkit-scrollbar {
+  div[style*="overflow"]::-webkit-scrollbar {
     height: 6px;
   }
 
-  [style*="overflowX: 'auto']::-webkit-scrollbar-track,
-  div[style*="overflow-x: auto"]::-webkit-scrollbar-track {
+  div[style*="overflow"]::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 3px;
   }
 
-  [style*="overflowX: 'auto']::-webkit-scrollbar-thumb,
-  div[style*="overflow-x: auto"]::-webkit-scrollbar-thumb {
+  div[style*="overflow"]::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 3px;
   }
