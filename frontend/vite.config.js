@@ -11,6 +11,11 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  // 生产环境配置
+  build: {
+    // 确保相对路径正确
+    base: './'
   }
 })
 
