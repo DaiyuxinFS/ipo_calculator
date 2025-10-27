@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Calculator from './components/Calculator'
+import PostCalculator from './components/PostCalculator'
 import StockTable from './components/StockTable'
 import StockDetail from './components/StockDetail'
 import './App.css'
@@ -11,7 +12,8 @@ function HomePage() {
       <nav className="nav-bar">
         <div className="nav-left">打新計算器</div>
         <div className="nav-right">
-          <a href="#calculator" className="nav-link">計算器</a>
+          <a href="#calculator" className="nav-link">收益預測</a>
+          <a href="#post-calculator" className="nav-link">收益驗證</a>
           <a href="#stocks" className="nav-link">新股數據</a>
           <a href="#info" className="nav-link">說明</a>
         </div>
@@ -24,9 +26,14 @@ function HomePage() {
           IPO<br/>CALCULATOR
         </h1>
 
-        {/* 计算器部分 */}
+        {/* 计算器部分 - 事前预测 */}
         <section id="calculator">
           <Calculator />
+        </section>
+
+        {/* 收益验证计算器 - 事后验证 */}
+        <section id="post-calculator" style={{ marginTop: '4rem' }}>
+          <PostCalculator />
         </section>
 
         {/* 新股数据表格 */}

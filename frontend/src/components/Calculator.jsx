@@ -34,7 +34,7 @@ function Calculator() {
 
   return (
     <div className="calculator-section">
-      <h2 className="section-title">收益計算</h2>
+      <h2 className="section-title">收益計算（事前預測）</h2>
       
       <div className="input-group">
         <label className="input-label">申購資金 (HKD)</label>
