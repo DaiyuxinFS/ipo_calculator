@@ -11,8 +11,19 @@ app.use(express.json());
 
 // PostgreSQL 连接池 - 连接到 daxin 数据库
 const pool = new Pool({
-  connectionString: 'postgresql://root:1m3s2R7xe6LlSYJ0fq8oVKTk5Ny4P9Fu@sjc1.clusters.zeabur.com:31080/daxin'
+  connectionString: 'postgresql://root:1m3s2R7xe6LlSYJ0fq8oVKTk5Ny4P9Fu@sjc1.clusters.zeabur.com:31080/daxin',
+  // 连接池配置
+  max: 20, // 最大连接数
+  idleTimeoutMillis: 30000, // 空闲连接超时时间
+  connectionTimeoutMillis: 10000, // 连接超时时间
   // 不使用SSL连接
+  ssl: false
+});
+
+// 错误处理 - 防止未处理的错误导致进程崩溃
+pool.on('error', (err, client) => {
+  console.error('数据库连接池错误:', err);
+  // 不要让进程崩溃，只记录错误
 });
 
 // 测试数据库连接
