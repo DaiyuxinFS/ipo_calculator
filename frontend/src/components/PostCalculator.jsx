@@ -174,82 +174,94 @@ function PostCalculator() {
         </select>
       </div>
 
-      {/* 申购信息 */}
+      {/* 申购和卖出信息 - 网格布局 */}
       <div style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '0.85rem', fontWeight: '500', color: '#666', letterSpacing: '0.1em' }}>
-        申購信息
+        申購與賣出信息
       </div>
       
-      <div className="input-group">
-        <label className="input-label">申購股數</label>
-        <input
-          type="number"
-          value={sharesApplied}
-          onChange={(e) => setSharesApplied(e.target.value)}
-          placeholder="申購了多少股"
-          className="input-field"
-        />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+        <div className="input-group" style={{ marginBottom: '0' }}>
+          <label className="input-label">申購股數</label>
+          <input
+            type="number"
+            value={sharesApplied}
+            onChange={(e) => setSharesApplied(e.target.value)}
+            placeholder="申購了多少股"
+            className="input-field"
+          />
+        </div>
+
+        <div className="input-group" style={{ marginBottom: '0' }}>
+          <label className="input-label">發行價 (HKD/股)</label>
+          <input
+            type="number"
+            value={issuePrice}
+            onChange={(e) => setIssuePrice(e.target.value)}
+            placeholder="IPO發行價格"
+            className="input-field"
+            step="0.01"
+          />
+        </div>
+
+        <div className="input-group" style={{ marginBottom: '0' }}>
+          <label className="input-label">中籤股數</label>
+          <input
+            type="number"
+            value={allocatedShares}
+            onChange={(e) => setAllocatedShares(e.target.value)}
+            placeholder="實際獲配的股數"
+            className="input-field"
+            step="1"
+          />
+        </div>
+
+        <div className="input-group" style={{ marginBottom: '0' }}>
+          <label className="input-label">賣出價格 (HKD/股)</label>
+          <input
+            type="number"
+            value={sellPrice}
+            onChange={(e) => setSellPrice(e.target.value)}
+            placeholder="賣出時的價格"
+            className="input-field"
+            step="0.01"
+          />
+        </div>
       </div>
 
-      <div className="input-group">
-        <label className="input-label">發行價 (HKD/股)</label>
-        <input
-          type="number"
-          value={issuePrice}
-          onChange={(e) => setIssuePrice(e.target.value)}
-          placeholder="IPO發行價格"
-          className="input-field"
-          step="0.01"
-        />
-      </div>
-
-      <div className="input-group">
-        <label className="input-label">中籤股數</label>
-        <input
-          type="number"
-          value={allocatedShares}
-          onChange={(e) => setAllocatedShares(e.target.value)}
-          placeholder="實際獲配的股數"
-          className="input-field"
-          step="1"
-        />
-      </div>
-
-      {/* 卖出信息 */}
-      <div style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '0.85rem', fontWeight: '500', color: '#666', letterSpacing: '0.1em' }}>
-        賣出信息
-      </div>
-
-      <div className="input-group">
-        <label className="input-label">賣出價格 (HKD/股)</label>
-        <input
-          type="number"
-          value={sellPrice}
-          onChange={(e) => setSellPrice(e.target.value)}
-          placeholder="賣出時的價格"
-          className="input-field"
-          step="0.01"
-        />
-      </div>
-
-      {/* 费用信息 */}
+      {/* 费用信息 - 网格布局 */}
       <div style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '0.85rem', fontWeight: '500', color: '#666', letterSpacing: '0.1em' }}>
         費用信息
       </div>
 
-      <div className="input-group">
-        <label className="input-label">申購手續費 (HKD)</label>
-        <input
-          type="number"
-          value={applicationFee}
-          onChange={(e) => setApplicationFee(e.target.value)}
-          placeholder="券商收取的打新手續費"
-          className="input-field"
-          step="0.01"
-        />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+        <div className="input-group" style={{ marginBottom: '0' }}>
+          <label className="input-label">申購手續費 (HKD)</label>
+          <input
+            type="number"
+            value={applicationFee}
+            onChange={(e) => setApplicationFee(e.target.value)}
+            placeholder="券商收取的手續費"
+            className="input-field"
+            step="0.01"
+          />
+        </div>
+
+        <div className="input-group" style={{ marginBottom: '0' }}>
+          <label className="input-label">賣出費用 (HKD)</label>
+          <input
+            type="number"
+            value={sellFee}
+            onChange={(e) => setSellFee(e.target.value)}
+            placeholder="佣金、印花稅等總額"
+            className="input-field"
+            step="0.01"
+          />
+        </div>
       </div>
 
-      <div className="input-group" style={{ marginBottom: '0.5rem' }}>
-        <label className="input-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      {/* 融资选项 */}
+      <div style={{ marginTop: '1.5rem' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.85rem', color: '#666' }}>
           <input
             type="checkbox"
             checked={useFinancing}
@@ -261,56 +273,46 @@ function PostCalculator() {
       </div>
 
       {useFinancing && (
-        <div style={{ marginLeft: '1.5rem', marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '4px' }}>
-          <div className="input-group">
-            <label className="input-label">融資金額 (HKD)</label>
-            <input
-              type="number"
-              value={financingAmount}
-              onChange={(e) => setFinancingAmount(e.target.value)}
-              placeholder="融資的金額"
-              className="input-field"
-              step="0.01"
-            />
-          </div>
+        <div style={{ marginTop: '1rem', padding: '1.2rem', background: 'rgba(0,0,0,0.02)', borderRadius: '6px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+            <div className="input-group" style={{ marginBottom: '0' }}>
+              <label className="input-label">融資金額 (HKD)</label>
+              <input
+                type="number"
+                value={financingAmount}
+                onChange={(e) => setFinancingAmount(e.target.value)}
+                placeholder="融資的金額"
+                className="input-field"
+                step="0.01"
+              />
+            </div>
 
-          <div className="input-group">
-            <label className="input-label">融資年利率 (%)</label>
-            <input
-              type="number"
-              value={financingRate}
-              onChange={(e) => setFinancingRate(e.target.value)}
-              placeholder="5"
-              className="input-field"
-              step="0.01"
-            />
-          </div>
+            <div className="input-group" style={{ marginBottom: '0' }}>
+              <label className="input-label">融資年利率 (%)</label>
+              <input
+                type="number"
+                value={financingRate}
+                onChange={(e) => setFinancingRate(e.target.value)}
+                placeholder="5"
+                className="input-field"
+                step="0.01"
+              />
+            </div>
 
-          <div className="input-group">
-            <label className="input-label">持有天數</label>
-            <input
-              type="number"
-              value={holdingDays}
-              onChange={(e) => setHoldingDays(e.target.value)}
-              placeholder="7"
-              className="input-field"
-              step="1"
-            />
+            <div className="input-group" style={{ marginBottom: '0' }}>
+              <label className="input-label">持有天數</label>
+              <input
+                type="number"
+                value={holdingDays}
+                onChange={(e) => setHoldingDays(e.target.value)}
+                placeholder="7"
+                className="input-field"
+                step="1"
+              />
+            </div>
           </div>
         </div>
       )}
-
-      <div className="input-group">
-        <label className="input-label">賣出費用 (HKD)</label>
-        <input
-          type="number"
-          value={sellFee}
-          onChange={(e) => setSellFee(e.target.value)}
-          placeholder="佣金、印花稅、平台費等總額"
-          className="input-field"
-          step="0.01"
-        />
-      </div>
 
       <div className="button-group">
         <button onClick={calculateReturn} className="btn btn-primary">
