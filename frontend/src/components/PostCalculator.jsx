@@ -38,11 +38,8 @@ function PostCalculator() {
     fetchStocks()
   }, [])
 
-  // 当选择股票时自动填入发行价
-  const handleStockSelect = (e) => {
-    const stockCode = e.target.value
-    setSelectedStock(stockCode)
-    
+  // 根据股票代码自动填入发行价
+  const fillIssuePriceByCode = (stockCode) => {
     if (stockCode) {
       const stock = stocks.find(s => s.代码 === stockCode)
       if (stock) {
@@ -59,6 +56,19 @@ function PostCalculator() {
     } else {
       setIssuePrice('')
     }
+  }
+
+  // 当选择股票时自动填入发行价
+  const handleStockSelect = (e) => {
+    const stockCode = e.target.value
+    setSelectedStock(stockCode)
+    fillIssuePriceByCode(stockCode)
+  }
+
+  // 当手动输入股票代码时，失去焦点后自动查询发行价
+  const handleStockCodeBlur = (e) => {
+    const stockCode = e.target.value.trim()
+    fillIssuePriceByCode(stockCode)
   }
 
   const calculateReturn = () => {
@@ -157,21 +167,25 @@ function PostCalculator() {
         事後驗證實際收益
       </div>
       
-      {/* 股票选择 */}
+      {/* 股票代码输入 */}
       <div className="input-group">
-        <label className="input-label">選擇IPO（可選）</label>
-        <select
+        <label className="input-label">IPO代碼（可選）</label>
+        <input
+          type="text"
           value={selectedStock}
-          onChange={handleStockSelect}
+          onChange={(e) => setSelectedStock(e.target.value)}
+          onBlur={handleStockCodeBlur}
+          placeholder="輸入或選擇股票代碼，如：2670"
           className="input-field"
-        >
-          <option value="">-- 手動輸入或選擇股票 --</option>
+          list="stock-list"
+        />
+        <datalist id="stock-list">
           {stocks.map(stock => (
             <option key={stock.代码} value={stock.代码}>
-              {stock.代码} - {stock.名称}
+              {stock.名称}
             </option>
           ))}
-        </select>
+        </datalist>
       </div>
 
       {/* 申购和卖出信息 - 网格布局 */}
