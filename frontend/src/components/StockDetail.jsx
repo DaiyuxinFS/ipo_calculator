@@ -141,7 +141,19 @@ function StockDetail() {
               <tbody>
                 {applyDetails.map((detail, index) => {
                   // 在 applyTiers 中查找匹配的数据
-                  const tierData = applyTiers.find(tier => tier.match_key === detail.match_key)
+                  // 支持灵活匹配：同时匹配 match_key 和基于 shares_applied 的匹配
+                  const tierData = applyTiers.find(tier => {
+                    // 精确匹配 match_key
+                    if (tier.match_key === detail.match_key) return true
+                    
+                    // 尝试基于股数匹配（处理小数点不一致的情况）
+                    const detailShares = parseFloat(detail.shares_applied)
+                    const tierShares = parseFloat(tier.shares_applied)
+                    const detailCode = detail.id
+                    const tierCode = tier.id
+                    
+                    return detailCode === tierCode && Math.abs(detailShares - tierShares) < 0.01
+                  })
                   
                   return (
                     <tr key={index}>

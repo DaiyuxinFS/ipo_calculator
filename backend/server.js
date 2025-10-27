@@ -67,19 +67,12 @@ app.get('/api/stock-details/:stockCode', async (req, res) => {
     // 3. 如果有申购明细数据，获取对应的配售结果
     let applyTiers = [];
     if (applyDetailsResult.rows.length > 0) {
-      // 获取所有 match_key
-      const matchKeys = applyDetailsResult.rows
-        .map(row => row.match_key)
-        .filter(key => key); // 过滤掉空值
-
-      if (matchKeys.length > 0) {
-        // 查询 apply_tiers 表
-        const applyTiersResult = await pool.query(
-          'SELECT * FROM apply_tiers WHERE match_key = ANY($1::text[])',
-          [matchKeys]
-        );
-        applyTiers = applyTiersResult.rows;
-      }
+      // 直接查询该股票的所有配售结果，然后在前端做灵活匹配
+      const applyTiersResult = await pool.query(
+        'SELECT * FROM apply_tiers WHERE id = $1',
+        [parseInt(stockCodeValue)]
+      );
+      applyTiers = applyTiersResult.rows;
     }
 
     res.json({
