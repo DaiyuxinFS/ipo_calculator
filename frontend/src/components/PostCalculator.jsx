@@ -6,6 +6,7 @@ function PostCalculator() {
   const [stocks, setStocks] = useState([])
   const [selectedStock, setSelectedStock] = useState('')
   const [issuePrice, setIssuePrice] = useState('')
+  const [showDropdown, setShowDropdown] = useState(false)
   
   // 申购信息
   const [sharesApplied, setSharesApplied] = useState('')
@@ -69,7 +70,29 @@ function PostCalculator() {
   const handleStockCodeBlur = (e) => {
     const stockCode = e.target.value.trim()
     fillIssuePriceByCode(stockCode)
+    // 延迟关闭下拉菜单,允许点击选项
+    setTimeout(() => setShowDropdown(false), 200)
   }
+
+  // 处理输入框变化
+  const handleStockInputChange = (e) => {
+    const value = e.target.value
+    setSelectedStock(value)
+    setShowDropdown(true)
+  }
+
+  // 选择股票选项
+  const handleSelectStock = (stockCode) => {
+    setSelectedStock(stockCode)
+    fillIssuePriceByCode(stockCode)
+    setShowDropdown(false)
+  }
+
+  // 过滤股票列表
+  const filteredStocks = stocks.filter(stock => 
+    stock.代码?.toLowerCase().includes(selectedStock.toLowerCase()) ||
+    stock.名称?.toLowerCase().includes(selectedStock.toLowerCase())
+  )
 
   const calculateReturn = () => {
     // 验证输入
@@ -168,24 +191,44 @@ function PostCalculator() {
       </div>
       
       {/* 股票代码输入 */}
-      <div className="input-group">
+      <div className="input-group" style={{ position: 'relative' }}>
         <label className="input-label">IPO代碼（可選）</label>
-        <input
-          type="text"
-          value={selectedStock}
-          onChange={(e) => setSelectedStock(e.target.value)}
-          onBlur={handleStockCodeBlur}
-          placeholder="輸入或選擇股票代碼，如：2670"
-          className="input-field"
-          list="stock-list"
-        />
-        <datalist id="stock-list">
-          {stocks.map(stock => (
-            <option key={stock.代码} value={stock.代码}>
-              {stock.名称}
-            </option>
-          ))}
-        </datalist>
+        <div style={{ position: 'relative' }}>
+          <input
+            type="text"
+            value={selectedStock}
+            onChange={handleStockInputChange}
+            onFocus={() => setShowDropdown(true)}
+            onBlur={handleStockCodeBlur}
+            placeholder="輸入或選擇股票代碼，如：2670"
+            className="input-field custom-select-input"
+          />
+          <button
+            type="button"
+            className="dropdown-arrow"
+            onClick={() => setShowDropdown(!showDropdown)}
+            onMouseDown={(e) => e.preventDefault()}
+          >
+            ▼
+          </button>
+          {showDropdown && filteredStocks.length > 0 && (
+            <div className="dropdown-menu">
+              {filteredStocks.slice(0, 10).map(stock => (
+                <div
+                  key={stock.代码}
+                  className="dropdown-item"
+                  onMouseDown={(e) => {
+                    e.preventDefault()
+                    handleSelectStock(stock.代码)
+                  }}
+                >
+                  <span className="stock-code">{stock.代码}</span>
+                  <span className="stock-name">{stock.名称}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 申购和卖出信息 - 网格布局 */}
@@ -339,98 +382,74 @@ function PostCalculator() {
 
       {/* 结果展示 */}
       {results && (
-        <div className="results-container" style={{ marginTop: '2rem' }}>
-          <div style={{ 
-            padding: '1.5rem', 
-            background: 'rgba(255,255,255,0.8)', 
-            border: '1px solid rgba(0,0,0,0.08)',
-            borderRadius: '8px',
-            fontSize: '0.85rem'
-          }}>
-            <div style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div>
-                  <div style={{ color: '#999', fontSize: '0.75rem', marginBottom: '0.3rem' }}>獲配股數</div>
-                  <div style={{ fontWeight: '500' }}>{formatShares(results.allocatedShares)} 股</div>
+        <div className="results-container post-calc-results" style={{ marginTop: '2rem' }}>
+          <div className="post-result-card">
+            <div className="post-result-section">
+              <div className="post-result-grid">
+                <div className="post-result-item">
+                  <div className="post-result-label">獲配股數</div>
+                  <div className="post-result-value">{formatShares(results.allocatedShares)} 股</div>
                 </div>
-                <div>
-                  <div style={{ color: '#999', fontSize: '0.75rem', marginBottom: '0.3rem' }}>中籤金額</div>
-                  <div style={{ fontWeight: '500' }}>HKD {formatNumber(results.paidAmount)}</div>
+                <div className="post-result-item">
+                  <div className="post-result-label">中籤金額</div>
+                  <div className="post-result-value">HKD {formatNumber(results.paidAmount)}</div>
                 </div>
-                <div>
-                  <div style={{ color: '#999', fontSize: '0.75rem', marginBottom: '0.3rem' }}>賣出金額</div>
-                  <div style={{ fontWeight: '500' }}>HKD {formatNumber(results.sellRevenue)}</div>
+                <div className="post-result-item">
+                  <div className="post-result-label">賣出金額</div>
+                  <div className="post-result-value">HKD {formatNumber(results.sellRevenue)}</div>
                 </div>
-                <div>
-                  <div style={{ color: '#999', fontSize: '0.75rem', marginBottom: '0.3rem' }}>毛利潤</div>
-                  <div style={{ fontWeight: '500', color: results.grossProfit >= 0 ? '#22c55e' : '#ef4444' }}>
+                <div className="post-result-item">
+                  <div className="post-result-label">毛利潤</div>
+                  <div className="post-result-value" style={{ color: results.grossProfit >= 0 ? '#22c55e' : '#ef4444' }}>
                     {results.grossProfit >= 0 ? '+' : ''}HKD {formatNumber(results.grossProfit)}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div style={{ marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-              <div style={{ color: '#666', fontSize: '0.8rem', fontWeight: '500', marginBottom: '0.8rem' }}>費用明細</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.78rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#999' }}>申購手續費</span>
+            <div className="post-result-section">
+              <div className="post-fees-title">費用明細</div>
+              <div className="post-fees-list">
+                <div className="post-fee-row">
+                  <span>申購手續費</span>
                   <span>HKD {formatNumber(results.fees.applicationFee)}</span>
                 </div>
                 {useFinancing && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#999' }}>融資利息</span>
+                  <div className="post-fee-row">
+                    <span>融資利息</span>
                     <span>HKD {formatNumber(results.fees.financingCost)}</span>
                   </div>
                 )}
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#999' }}>賣出費用</span>
+                <div className="post-fee-row">
+                  <span>賣出費用</span>
                   <span>HKD {formatNumber(results.fees.sellFee)}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid rgba(0,0,0,0.06)', fontWeight: '500' }}>
+                <div className="post-fee-row post-fee-total">
                   <span>總費用</span>
                   <span>HKD {formatNumber(results.fees.total)}</span>
                 </div>
               </div>
             </div>
 
-            <div style={{ 
-              padding: '1.2rem', 
-              background: results.netProfit >= 0 ? 'rgba(34, 197, 94, 0.08)' : 'rgba(239, 68, 68, 0.08)',
-              borderRadius: '6px'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: '#666', marginBottom: '0.3rem' }}>💰 淨收益</div>
-                  <div style={{ 
-                    fontSize: '1.5rem', 
-                    fontWeight: '600',
-                    color: results.netProfit >= 0 ? '#22c55e' : '#ef4444'
-                  }}>
+            <div className={`post-final-result ${results.netProfit >= 0 ? 'profit' : 'loss'}`}>
+              <div className="post-final-grid">
+                <div className="post-final-item">
+                  <div className="post-final-label">💰 淨收益</div>
+                  <div className="post-final-value" style={{ color: results.netProfit >= 0 ? '#22c55e' : '#ef4444' }}>
                     {results.netProfit >= 0 ? '+' : ''}HKD {formatNumber(results.netProfit)}
                   </div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#666', marginBottom: '0.3rem' }}>📊 收益率</div>
-                  <div style={{ 
-                    fontSize: '1.5rem', 
-                    fontWeight: '600',
-                    color: results.returnRate >= 0 ? '#22c55e' : '#ef4444'
-                  }}>
+                <div className="post-final-item" style={{ textAlign: 'right' }}>
+                  <div className="post-final-label">📊 收益率</div>
+                  <div className="post-final-value" style={{ color: results.returnRate >= 0 ? '#22c55e' : '#ef4444' }}>
                     {results.returnRate >= 0 ? '+' : ''}{results.returnRate.toFixed(2)}%
                   </div>
                 </div>
               </div>
               
-              {results.netProfit >= 0 ? (
-                <div style={{ marginTop: '0.8rem', fontSize: '0.75rem', color: '#22c55e', textAlign: 'center' }}>
-                  ✓ 盈利
-                </div>
-              ) : (
-                <div style={{ marginTop: '0.8rem', fontSize: '0.75rem', color: '#ef4444', textAlign: 'center' }}>
-                  ✗ 虧損
-                </div>
-              )}
+              <div className="post-status-badge">
+                {results.netProfit >= 0 ? '✓ 盈利' : '✗ 虧損'}
+              </div>
             </div>
           </div>
 
