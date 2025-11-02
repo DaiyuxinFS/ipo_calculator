@@ -69,9 +69,9 @@ app.get('/api/stock-details/:stockCode', async (req, res) => {
     const stockInfo = stockInfoResult.rows[0];
     const stockCodeValue = stockInfo.代码;
 
-    // 2. 获取申购明细（根据股票代码匹配）
+    // 2. 获取申购明细（根据股票代码匹配，去重）
     const applyDetailsResult = await pool.query(
-      'SELECT * FROM 申购明细 WHERE id = $1 ORDER BY shares_applied',
+      'SELECT DISTINCT ON (id, shares_applied) * FROM 申购明细 WHERE id = $1 ORDER BY id, shares_applied',
       [parseInt(stockCodeValue)]
     );
 
