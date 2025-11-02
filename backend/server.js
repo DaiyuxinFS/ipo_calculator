@@ -3,7 +3,7 @@ const cors = require('cors');
 const { Pool } = require('pg');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // 中间件
 app.use(cors());
@@ -94,6 +94,54 @@ app.get('/api/stock-details/:stockCode', async (req, res) => {
   } catch (error) {
     console.error('查询详情错误:', error);
     res.status(500).json({ error: '获取详情失败', details: error.message });
+  }
+});
+
+// 获取档位详情（用于策略对比）
+app.get('/api/tier-details/:stockCode', async (req, res) => {
+  try {
+    const { stockCode } = req.params;
+    console.log('获取档位详情，代码:', stockCode);
+    
+    // 1. 获取股票基本信息
+    const stockInfoResult = await pool.query(
+      'SELECT * FROM 招股书 WHERE "代码" = $1',
+      [stockCode]
+    );
+    
+    if (stockInfoResult.rows.length === 0) {
+      return res.status(404).json({ error: '未找到该股票' });
+    }
+    
+    const stockInfo = stockInfoResult.rows[0];
+    const stockCodeValue = stockInfo.代码;
+    
+    // 2. 获取申购明细和配售结果（联合查询）
+    const tiersResult = await pool.query(`
+      SELECT 
+        am.id,
+        am.shares_applied,
+        am.max_payment_hkd,
+        am.apply_group,
+        am.match_key,
+        at.approx_alloc_pct,
+        at.valid_applications,
+        at.winners
+      FROM 申购明细 am
+      LEFT JOIN apply_tiers at ON am.match_key = at.match_key OR 
+        (am.id = at.id AND ABS(am.shares_applied - at.shares_applied) < 0.01)
+      WHERE am.id = $1
+      ORDER BY am.shares_applied ASC
+    `, [parseInt(stockCodeValue)]);
+    
+    res.json({
+      stock: stockInfo,
+      tiers: tiersResult.rows
+    });
+    
+  } catch (error) {
+    console.error('获取档位详情失败:', error);
+    res.status(500).json({ error: '服务器错误', details: error.message });
   }
 });
 
