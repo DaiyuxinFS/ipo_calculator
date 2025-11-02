@@ -23,7 +23,7 @@ function PostCalculator() {
   // 费用信息
   const [applicationFee, setApplicationFee] = useState('100')
   const [useFinancing, setUseFinancing] = useState(false)
-  const [financingAmount, setFinancingAmount] = useState('')
+  const [financingMultiple, setFinancingMultiple] = useState('10')
   const [financingRate, setFinancingRate] = useState('5')
   const [holdingDays, setHoldingDays] = useState('7')
   const [sellFee, setSellFee] = useState('0')
@@ -292,11 +292,16 @@ function PostCalculator() {
 
     // 3. 费用计算
     let financingCost = 0
+    let actualFinancingAmount = 0
     if (useFinancing) {
-      const finAmount = parseFloat(financingAmount) || 0
+      const multiple = parseFloat(financingMultiple) || 1
+      const totalRequired = shares * price
+      const ownCapital = totalRequired / multiple
+      actualFinancingAmount = totalRequired - ownCapital
+      
       const finRate = parseFloat(financingRate) / 100
       const days = parseFloat(holdingDays) || 0
-      financingCost = finAmount * (finRate / 365) * days
+      financingCost = actualFinancingAmount * (finRate / 365) * days
     }
 
     const totalFees = appFee + financingCost + sellFeeValue
@@ -568,15 +573,17 @@ function PostCalculator() {
         <div style={{ marginTop: '1rem', padding: '1.2rem', background: 'rgba(0,0,0,0.02)', borderRadius: '6px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
             <div className="input-group" style={{ marginBottom: '0' }}>
-              <label className="input-label">融資金額 (HKD)</label>
-              <input
-                type="number"
-                value={financingAmount}
-                onChange={(e) => setFinancingAmount(e.target.value)}
-                placeholder="融資的金額"
+              <label className="input-label">融資倍數</label>
+              <select
+                value={financingMultiple}
+                onChange={(e) => setFinancingMultiple(e.target.value)}
                 className="input-field"
-                step="0.01"
-              />
+              >
+                <option value="5">5倍</option>
+                <option value="10">10倍</option>
+                <option value="15">15倍</option>
+                <option value="20">20倍</option>
+              </select>
             </div>
 
             <div className="input-group" style={{ marginBottom: '0' }}>
