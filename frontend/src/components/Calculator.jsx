@@ -139,38 +139,57 @@ function Calculator() {
       const gain = parseFloat(ipo.expectedGain) || 0
       
       const capitalUsed = shares * price
-      const expectedProfit = allocShares * price * (gain / 100) * (allocRate / 100)
+      const expectedGrossProfit = allocShares * price * (gain / 100) * (allocRate / 100)
+      
+      // 计算该IPO的融资成本
+      let ipoFinancingCost = 0
+      if (useFinancing) {
+        const multiple = parseFloat(financingMultiple) || 1
+        const ownCapital = capitalUsed / multiple
+        const financingAmount = capitalUsed - ownCapital
+        const rate = parseFloat(financingRate) / 100
+        const days = parseFloat(holdingDays) || 0
+        ipoFinancingCost = financingAmount * (rate / 365) * days
+      }
+      
+      // 期望净收益 = 期望毛利润 - 融资成本
+      const expectedNetProfit = expectedGrossProfit - ipoFinancingCost
       
       totalCapitalUsed += capitalUsed
-      totalExpectedProfit += expectedProfit
+      totalExpectedProfit += expectedNetProfit
       
       return {
         stockName: ipo.stockName || ipo.stockCode,
         capitalUsed,
-        expectedProfit
+        expectedGrossProfit,
+        ipoFinancingCost,
+        expectedNetProfit
       }
     })
     
-    // 计算融资成本
-    let financingCost = 0
-    let financingAmount = 0
+    // 计算总融资金额（用于显示）
+    let totalFinancingAmount = 0
+    let totalFinancingCost = 0
     
-    if (useFinancing && totalCapitalUsed > own) {
-      financingAmount = Math.min(totalCapitalUsed - own, totalCapitalUsed * 0.9)
-      const rate = parseFloat(financingRate) / 100
-      const days = parseFloat(holdingDays) || 0
-      financingCost = financingAmount * (rate / 365) * days
+    if (useFinancing) {
+      const multiple = parseFloat(financingMultiple) || 1
+      const totalOwnCapital = totalCapitalUsed / multiple
+      totalFinancingAmount = totalCapitalUsed - totalOwnCapital
+      
+      // 融资成本已经在各个IPO中计算并累加到totalExpectedProfit了
+      totalFinancingCost = ipoResults.reduce((sum, ipo) => sum + ipo.ipoFinancingCost, 0)
     }
     
-    const netProfit = totalExpectedProfit - financingCost
+    // totalExpectedProfit 已经是净收益（扣除了融资成本）
+    const netProfit = totalExpectedProfit
     const returnRate = own > 0 ? (netProfit / own) * 100 : 0
     
     return {
       planName: plan.name,
       totalCapitalUsed,
       totalExpectedProfit,
-      financingAmount,
-      financingCost,
+      financingAmount: totalFinancingAmount,
+      financingCost: totalFinancingCost,
       netProfit,
       returnRate,
       ipoResults,
@@ -724,10 +743,11 @@ function Calculator() {
             }}>
               計算說明
             </div>
-            • 期望收益 = 實際中籤股數 × 發行價 × 預期漲幅 × 中籤率<br/>
+            • 期望毛利潤 = 如中籤可獲股數 × 發行價 × 預期漲幅 × 預估中籤率<br/>
             • 融資成本 = 融資金額 × (年利率 / 365) × 持有天數<br/>
-            • 淨收益 = 期望收益 - 融資成本<br/>
-            • 收益率 = 淨收益 / 本金 × 100%<br/>
+            • 期望淨收益 = 期望毛利潤 - 融資成本<br/>
+            • 收益率 = 期望淨收益 / 本金 × 100%<br/>
+            • 注意：融資成本無論中籤與否都需支付，已計入期望淨收益中<br/>
             • 以上計算僅供參考，實際收益會受市場波動、中籤率等多種因素影響
           </div>
         </div>
